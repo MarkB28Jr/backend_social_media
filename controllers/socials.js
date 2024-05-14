@@ -5,7 +5,7 @@ const index = async (req, res, next) => {
     try {
         res.json(await Social.find({}))
     } catch (error) {
-        res.status(400).json(error)
+        return res.status(400).json(error)
     }
 }
 
@@ -21,8 +21,7 @@ const show = async (req, res, next) => {
     try {
         res.json(await Social.findById(req.params.id));
     } catch (error) {
-        //send error
-        res.status(400).json(error);
+        return res.status(400).json(error);
     }
 };
 
@@ -30,7 +29,7 @@ const destroy = async (req, res, next) => {
     try {
         res.json(await Social.findByIdAndDelete(req.params.id))
     } catch (error) {
-        res.status(400).json(error)
+        return res.status(400).json(error)
 
     }
 }
@@ -40,8 +39,7 @@ const update = async (req, res, next) => {
         res.json(await Social.findByIdAndUpdate(req.params.id, req.body, { new: true })
         );
     } catch (error) {
-        //send error
-        res.status(400).json(error);
+        return res.status(400).json(error);
     }
 };
 

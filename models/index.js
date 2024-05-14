@@ -1,3 +1,3 @@
 module.exports = {
-  Park: require('./Social')
+  Social: require('./Social')
 }
