@@ -1,27 +1,9 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
- 
 
-const MessagingSchema = new Schema({
-    title: String,
-    name: String,
-    username: String,
-    content: String,
-    // date: Date,
-},
-{ timestamps: true }
-)
-
-const CommunitySchema = new Schema ({
-    communityName: String,
-    email: String,
-    username: String,
-    content: String,
-},
-{ timestamps: true })
-
+/*************** Social / Profile / User Authiraztion Schema ***************/
 const SocialSchema = new Schema({
-    user:{
+    user: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User"
@@ -32,12 +14,19 @@ const SocialSchema = new Schema({
         type: String,
         enum: ['male', 'female', 'other']
     },
-    image:[{
+    image: [{
         type: String
     }],
-    message: {MessagingSchema},
-    community: {CommunitySchema},
+    message: {
+        type: Schema.Types.ObjectId,
+        ref: 'Message'
+    },
+    community: {
+        type: Schema.Types.ObjectId,
+        ref: 'Community'
+    },
 },
-{ timestamps: true });
+    { timestamps: true }
+)
 
 module.exports = mongoose.model("Social", SocialSchema)

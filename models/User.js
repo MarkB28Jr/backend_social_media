@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+/*************** User Schema ***************/
 const UserSchema = new Schema({
   email: {
     type: String,
