@@ -1,6 +1,5 @@
 const express = require('express')
 const { Social, Community, Message, User } = require('../models')
-const { default: mongoose } = require('mongoose')
 
 /*************** SOCIAL ***************/
 const index = async (req, res, next) => {
@@ -85,46 +84,46 @@ const indexCommunity = async (req, res, next) => {
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }
-}
-
-const createCommunity = async (req, res, next) => {
+  }
+  
+  const createCommunity = async (req, res, next) => {
     try {
         res.json(await Community.create(req.body))
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }
-}
-
-const showCommunity = async (req, res, next) => {
+  }
+  
+  const showCommunity = async (req, res, next) => {
     try {
         res.json(await Community.findById(req.params.id));
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }
-}
-
-/*************** COMMUNITY ***************/
+  }
+  
+  /*************** MESSAGE ***************/
 const indexMessage = async (req, res, next) => {
     try {
         res.json(await Message.find({}))
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }
-}
-const createMessage = async (req, res, next) => {
+  }
+  const createMessage = async (req, res, next) => {
     try {
         res.json(await Message.create(req.body))
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }
-}
-const showMessage = async (req, res, next) => {
+  }
+  const showMessage = async (req, res, next) => {
     try {
         res.json(await Message.findById(req.params.id));
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }
-}
+  }
 
 
 module.exports = {
