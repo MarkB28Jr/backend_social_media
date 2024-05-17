@@ -5,31 +5,21 @@ const socialRouter = require('../controllers/socials')
 
 
 /*************** SOCIAL ***************/
-/*************** Index All Social ***************/
 router.get('/', socialRouter.index)
-/*************** Create Social ***************/
+router.get('/user', auth, socialRouter.getUserIndex)
 router.post('/', auth, socialRouter.create)
-/*************** Show Individual Social ***************/
 router.get('/:id', socialRouter.show)
-/*************** Delete Social ***************/
-router.delete('/:id', socialRouter.delete)
-/*************** Update Social ***************/
-router.put('/:id', socialRouter.update)
+router.delete('/:id', auth, socialRouter.delete)
+router.put('/:id',auth, socialRouter.update)
 
 /*************** COMMUNITY ***************/
-/*************** Create Community ***************/
-router.post('/community', auth, validateCommunity, socialRouter.createCommunity)
-/*************** Show Individual Community ***************/
+router.post('/community', auth, socialRouter.createCommunity)
 router.get('/community/:id', socialRouter.showCommunity)
-/*************** Index All Community ***************/
 router.get('/community', socialRouter.indexCommunity)
 
 /*************** MESSAGE ***************/
-/*************** Create Message ***************/
-router.post('/message', auth, validateCommunity, socialRouter.createMessage)
-/*************** Show Individual Message ***************/
+router.post('/message', auth, socialRouter.createMessage)
 router.get('/message/:id', socialRouter.showMessage)
-/*************** Index All Message ***************/
 router.get('/message', socialRouter.indexMessage)
 
 module.exports = router
