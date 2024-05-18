@@ -2,8 +2,10 @@ const express = require('express')
 const router = express.Router()
 const usersRouter = require('../controllers/users')
 
+
+
 /*************** Register User ***************/
-router.post('/', usersRouter.registerUser)
+router.post('/register', usersRouter.registerUser)
 
 /*************** Login User ***************/
 router.post('/login', usersRouter.loginUser)
