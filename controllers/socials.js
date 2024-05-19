@@ -127,8 +127,6 @@ const showMessage = async (req, res, next) => {
   }
 }
 
-
-
 /*************** REMOVED ALL status("number") FOR POP UP DISPLAYING WHATS WRONG ***************/
 /*************** Register User ***************/
 const registerUser = async (req, res, next) => {
@@ -151,11 +149,8 @@ const registerUser = async (req, res, next) => {
     // Hash password
     const hashedPassword = await hashPassword(password)
     // Register User
-    const user = await User.create({ name, email, password: hashedPassword })
-    jwt.sign({ email: user.email, id: user._id, name: user.name }, process.env.JWT_SECRET, {}, (err, token) => {
-      if (err) throw err
-      res.cookie('token', token, { sameSite: 'none', secure: true }).status(201).json(user)
-    })
+    const user = await User.create({ name: name, email: email, password: hashedPassword })
+    res.json(user)
   } catch (error) {
     return res.status(500).json({ error: error.message })
   }
@@ -197,16 +192,15 @@ const logOff = async () => {
   res.cookie('token', '', { SameSite: 'none', secure: true }).json({ message: "Logged Out" })
 }
 
-
 const getProfile = (req, res) => {
-  const { token } = req.cookies
+  const token = req.cookies
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
       if (err) throw err;
       res.json(user)
     })
   } else {
-    res.json(null)
+    res.status(401).json('No Token')
   }
 }
 

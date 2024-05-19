@@ -4,16 +4,14 @@ const socialRouter = require('../controllers/socials')
 
 /*************** SOCIAL ***************/
 router.get('/', socialRouter.index)
-router.get('/user', socialRouter.getUserIndex)
+// router.get('/user', socialRouter.getUserIndex)
 router.post('/', socialRouter.create)
 router.get('/:id', socialRouter.show)
 router.delete('/:id', socialRouter.delete)
 router.put('/:id', socialRouter.update)
 
-
 /*************** Profile ***************/
 router.get('/profile', socialRouter.getProfile)
-
 
 /*************** COMMUNITY ***************/
 router.post('/community', socialRouter.createCommunity)
