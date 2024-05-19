@@ -12,10 +12,13 @@ const socialRouter = require('./routes/socials')
 const usersRouter = require('./routes/users')
 
 /*************** App ***************/
-app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cookieParser())
-app.use(express.urlencoded({extended: false}))
+app.use((req, res, next) => {
+  res.setHeader('Set-Cookie', 'SameSite=none')
+  next()
+})
+app.use(express.urlencoded({ extended: true }))
 app.use(cors({
   origin: 'http://127.0.0.1:5173',
   credentials: true
