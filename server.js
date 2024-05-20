@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   res.setHeader('Set-Cookie', 'SameSite=none')
   next()
 })
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: false }))
 app.use(cors({
   origin: process.env.CLIENT_URL,
   credentials: true

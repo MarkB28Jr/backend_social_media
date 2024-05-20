@@ -10,8 +10,8 @@ router.get('/:id', socialRouter.show)
 router.delete('/:id', socialRouter.delete)
 router.put('/:id', socialRouter.update)
 
-/*************** Profile ***************/
-router.get('/profile', socialRouter.getProfile)
+// /*************** Profile ***************/
+// router.get('/profile', socialRouter.getProfile)
 
 /*************** COMMUNITY ***************/
 router.post('/community', socialRouter.createCommunity)

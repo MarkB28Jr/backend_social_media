@@ -130,11 +130,10 @@ const showMessage = async (req, res, next) => {
 /*************** REMOVED ALL status("number") FOR POP UP DISPLAYING WHATS WRONG ***************/
 /*************** Register User ***************/
 const registerUser = async (req, res, next) => {
-
-  try {
-    const { name, email, password } = req.body
+  // try {
+    const { username, password } = req.body
     // Check if all fields are used
-    if (!email || !password) {
+    if (!username || !password) {
       return res.json({ error: "All fields are required" })
     }
     // Check Password Length
@@ -142,71 +141,71 @@ const registerUser = async (req, res, next) => {
       return res.json({ error: "Password must be at least 8 characters" })
     }
     // Check Email
-    const exist = await User.findOne({ email })
+    const exist = await User.findOne({ username })
     if (exist) {
       return res.json({ error: "Email Already Exist" })
     }
     // Hash password
     const hashedPassword = await hashPassword(password)
     // Register User
-    const createUser = await User.create({ email: email, password: hashedPassword })
+    const createUser = await User.create({ username, password: hashedPassword })
     jwt.sign({userId: createUser._id }, process.env.JWT_SECRET, {}, (err, token) => {
       if (err) throw err
-      res.cookie('token', token, { SameSite: 'none', secure: true }).status(201).json({userId: createUser._id})
+      res.cookie('token', token, { SameSite: 'none', secure: true }).status(201).json({id: createUser._id})
     })
-    // res.json(createUser)
-  } catch (error) {
-    return res.status(500).json({ error: error.message })
-  }
+    console.log(registerUser)
+  // } catch (error) {
+  //   return res.status(500).json({ error: error.message })
+  // }
 }
 
 /*************** Login User ***************/
-const loginUser = async (req, res, next) => {
-  try {
-    const { email, password } = req.body
-    // Check if all fields are used
-    // Check Email
-    if (!email || !password) {
-      return res.json({ error: "All fields are required" })
-    }
-    if (password.length < 8) {
-      return res.json({ error: "Password must be at least 8 characters" })
-    }
-    const user = await User.findOne({ email })
-    if (!user) {
-      return res.json({ error: "Email Does Not Exists" })
-    }
-    // Check Password
-    const matchPassword = await comparePassword(password, user.password)
-    if (matchPassword) {
-      // jwt.sign({ email: user.email, id: user._id, name: user.name }, process.env.JWT_SECRET, {}, (err, token) => {
-      //   if (err) throw err
-      //   res.cookie('token', token, { SameSite: 'none', secure: true }).status(201).json(user)
-      // })
-    }
-    if (!matchPassword) {
-      return res.json({ error: "Wrong Password" })
-    }
-  } catch (error) {
-    return res.json({ error: error.message })
-  }
-}
+// const loginUser = async (req, res, next) => {
+//   try {
+//     const { username, password } = req.body
+//     // Check if all fields are used
+//     // Check Email
+//     if (!username || !password) {
+//       return res.json({ error: "All fields are required" })
+//     }
+//     if (password.length < 8) {
+//       return res.json({ error: "Password must be at least 8 characters" })
+//     }
+//     const user = await User.findOne({ email })
+//     if (!user) {
+//       return res.json({ error: "Email Does Not Exists" })
+//     }
+//     // Check Password
+//     const matchPassword = await comparePassword(password, user.password)
+//     if (matchPassword) {
+//       // jwt.sign({ email: user.email, id: user._id, name: user.name }, process.env.JWT_SECRET, {}, (err, token) => {
+//       //   if (err) throw err
+//       //   res.cookie('token', token, { SameSite: 'none', secure: true }).status(201).json(user)
+//       // })
+//     }
+//     if (!matchPassword) {
+//       return res.json({ error: "Wrong Password" })
+//     }
+//   } catch (error) {
+//     return res.json({ error: error.message })
+//   }
+// }
 
 const logOff = async () => {
   res.cookie('token', '', { SameSite: 'none', secure: true }).json({ message: "Logged Out" })
 }
 
 const getProfile = (req, res) => {
-  const token = req.cookies
+  const token = req.cookies?.token;
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
+    jwt.verify(token, jwtSecret, {}, (err, userData) => {
       if (err) throw err;
-      res.json(user)
-    })
+      res.json(userData);
+    });
   } else {
-    res.status(401).json('No Token')
+    res.status(401).json('no token');
   }
-}
+};
 
 module.exports = {
   index,
@@ -223,6 +222,6 @@ module.exports = {
   showMessage,
   getProfile,
   registerUser,
-  loginUser,
+  // loginUser,
   logOff
 }
