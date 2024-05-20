@@ -1,6 +1,6 @@
 const { Social, User } = require('../models')
 const { hashPassword, comparePassword } = require('../middlewares/auth')
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 const JWT_SECRET = process.env.JWT_SECRET
 require("dotenv").config()
 
@@ -71,35 +71,70 @@ const update = async (req, res, next) => {
 }
 
 /*************** Register User | Login User ***************/
+// const registerUser = async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
+//     const hashedPassword = await hashPassword(password);
+//     const user = new User({ username, password: hashedPassword });
+//     await user.save();
+
+//     // Generate a JWT
+//     const token = generateToken(user);
+
+//     // Send the JWT to the client
+//     res.status(201).send({ message: 'User registered successfully', token });
+//   } catch (error) {
+//     res.status(500).send({ message: 'Error registering user' });
+//   }
+// }
 const registerUser = async (req, res, next) => {
-    const { username, password } = req.body
-    // Check if all fields are used && Password Length
-    if (!username || (!password && password.length < 8)) {
-      return res.json({ error: "All fields are required" })
-    }
-    // Check Username exist
-    const exist = await User.findOne({ username })
-    if (exist) {
-      return res.json({ error: "Username Already Exist" })
-    }
-    // Hash password
-    const hashedPassword = await hashPassword(password)
-    const createToken = (_id) => {
-      return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "10d" })
-    }
-    // Register User
-    const user = await User.create({ username, password: hashedPassword })
-    const token = createToken(user._id)
-    res.cookie('token', token, { SameSite: 'none', secure: true }).status(201).json
+  const { username, password } = req.body
+  // Check if all fields are used && Password Length
+  if (!username || (!password && password.length < 8)) {
+    return res.json({ error: "All fields are required" })
+  }
+  // Check Username exist
+  const exist = await User.findOne({ username })
+  if (exist) {
+    return res.json({ error: "Username Already Exist" })
+  }
+  // Hash password
+  const hashedPassword = await hashPassword(password)
+  const createToken = (_id) => {
+    return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "10d" })
+  }
+  // Register User
+  const user = await User.create({ username, password: hashedPassword })
+  const token = createToken(user._id)
+  res.cookie('token', token).status(201).json({ id: user._id, token })
 }
 
 const logOff = async () => {
   res.cookie('token', '', { SameSite: 'none', secure: true }).json({ message: "Logged Out" })
 }
 
+// const getProfile = (req, res) => {
+//   try {
+//     const token = req.cookies?.token;
+//     if (!token) {
+//       return res.status(401).json({ error: 'No token found' });
+//     }
+//     jwt.verify(token, JWT_SECRET, {}, (err, userData) => {
+//       if (err) {
+//         console.error('Error verifying JWT token:', err);
+//         return res.status(401).json({ error: 'Invalid token' });
+//       }
+//       res.json(userData);
+//     });
+//   } catch (error) {
+//     console.error('Error fetching user profile:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// }
+
 const getProfile = (req, res) => {
   try {
-    const token = req.cookies?.token;
+    const token = req.headers.authorization.split(' ')[1];
     if (!token) {
       return res.status(401).json({ error: 'No token found' });
     }
@@ -108,7 +143,12 @@ const getProfile = (req, res) => {
         console.error('Error verifying JWT token:', err);
         return res.status(401).json({ error: 'Invalid token' });
       }
-      res.json(userData);
+      // Query the database for the user with the given ID
+      const user = db.users.find(user => user.id === userData.userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json(user.profile);
     });
   } catch (error) {
     console.error('Error fetching user profile:', error);

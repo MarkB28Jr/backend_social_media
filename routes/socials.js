@@ -9,19 +9,4 @@ router.get('/:id', socialRouter.show)
 router.delete('/:id', socialRouter.delete)
 router.put('/:id', socialRouter.update)
 
-// /*************** Profile ***************/
-// router.get('/profile', socialRouter.getProfile)
-
-/*************** COMMUNITY ***************/
-// router.post('/community', socialRouter.createCommunity)
-// router.get('/community/:id', socialRouter.showCommunity)
-// router.get('/community', socialRouter.indexCommunity)
-
-/*************** MESSAGE ***************/
-// router.post('/message', socialRouter.createMessage)
-// router.get('/message/:id', socialRouter.showMessage)
-// router.get('/message', socialRouter.indexMessage)
-
-// router.get('/social', socialRouter.indexSocial)
-
 module.exports = router
