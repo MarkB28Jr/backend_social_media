@@ -149,8 +149,12 @@ const registerUser = async (req, res, next) => {
     // Hash password
     const hashedPassword = await hashPassword(password)
     // Register User
-    const user = await User.create({ name: name, email: email, password: hashedPassword })
-    res.json(user)
+    const createUser = await User.create({ email: email, password: hashedPassword })
+    jwt.sign({userId: createUser._id }, process.env.JWT_SECRET, {}, (err, token) => {
+      if (err) throw err
+      res.cookie('token', token, { SameSite: 'none', secure: true }).status(201).json({userId: createUser._id})
+    })
+    // res.json(createUser)
   } catch (error) {
     return res.status(500).json({ error: error.message })
   }
@@ -175,10 +179,10 @@ const loginUser = async (req, res, next) => {
     // Check Password
     const matchPassword = await comparePassword(password, user.password)
     if (matchPassword) {
-      jwt.sign({ email: user.email, id: user._id, name: user.name }, process.env.JWT_SECRET, {}, (err, token) => {
-        if (err) throw err
-        res.cookie('token', token, { SameSite: 'none', secure: true }).status(201).json(user)
-      })
+      // jwt.sign({ email: user.email, id: user._id, name: user.name }, process.env.JWT_SECRET, {}, (err, token) => {
+      //   if (err) throw err
+      //   res.cookie('token', token, { SameSite: 'none', secure: true }).status(201).json(user)
+      // })
     }
     if (!matchPassword) {
       return res.json({ error: "Wrong Password" })
