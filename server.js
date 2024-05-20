@@ -10,6 +10,8 @@ const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const socialRouter = require('./routes/socials')
 const usersRouter = require('./routes/users')
+const ws = require('ws')
+const { connect } = require("mongoose")
 
 /*************** App ***************/
 app.use(express.json())
@@ -28,4 +30,9 @@ app.use(morgan('dev'))
 app.use('/social', socialRouter)
 app.use('/users', usersRouter)
 
-app.listen(PORT, () => console.log(`Connected to ${PORT}!`))
+const server = app.listen(PORT, () => console.log(`Connected to ${PORT}!`))
+const wss = new ws.WebSocketServer({ server })
+wss.on('connection', (connection) => {
+  console.log('Connected to websocket')
+  connection.send('hello')
+})

@@ -1,17 +1,11 @@
 const { Social, Community, Message, User } = require('../models')
 const { hashPassword, comparePassword } = require('../middlewares/auth')
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = 'my-secret-key';
 require("dotenv").config()
 
 /*************** SOCIAL ***************/
 const index = async (req, res, next) => {
-  try {
-    res.json(await Social.find({}))
-  } catch (error) {
-    return res.status(400).json({ error: error.message })
-  }
-}
-const getUserIndex = async (req, res, next) => {
   try {
     res.json(await Social.find({}))
   } catch (error) {
@@ -130,7 +124,6 @@ const showMessage = async (req, res, next) => {
 /*************** REMOVED ALL status("number") FOR POP UP DISPLAYING WHATS WRONG ***************/
 /*************** Register User ***************/
 const registerUser = async (req, res, next) => {
-  // try {
     const { username, password } = req.body
     // Check if all fields are used
     if (!username || !password) {
@@ -149,14 +142,10 @@ const registerUser = async (req, res, next) => {
     const hashedPassword = await hashPassword(password)
     // Register User
     const createUser = await User.create({ username, password: hashedPassword })
-    jwt.sign({userId: createUser._id }, process.env.JWT_SECRET, {}, (err, token) => {
+    jwt.sign({userId: createUser._id }, JWT_SECRET, {}, (err, token) => {
       if (err) throw err
       res.cookie('token', token, { SameSite: 'none', secure: true }).status(201).json({id: createUser._id})
     })
-    console.log(registerUser)
-  // } catch (error) {
-  //   return res.status(500).json({ error: error.message })
-  // }
 }
 
 /*************** Login User ***************/
@@ -196,20 +185,29 @@ const logOff = async () => {
 }
 
 const getProfile = (req, res) => {
-  const token = req.cookies?.token;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, (err, userData) => {
-      if (err) throw err;
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return res.status(401).json({ error: 'No token found' });
+    }
+
+    jwt.verify(token, JWT_SECRET, {}, (err, userData) => {
+      if (err) {
+        // Handle JWT verification errors
+        console.error('Error verifying JWT token:', err);
+        return res.status(401).json({ error: 'Invalid token' });
+      }
       res.json(userData);
     });
-  } else {
-    res.status(401).json('no token');
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 module.exports = {
   index,
-  getUserIndex,
+  // getUserIndex,
   create,
   show,
   delete: destroy,
