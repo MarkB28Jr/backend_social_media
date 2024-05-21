@@ -31,7 +31,7 @@ const show = async (req, res, next) => {
 }
 const showCommunity = async (req, res, next) => {
   try {
-    res.json(await Social.findById(req.params.id))
+    res.json(await Community.findById(req.params.id))
   } catch (error) {
     return res.status(400).json(error);
   }

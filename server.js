@@ -21,7 +21,7 @@ app.use(cors({
 }))
 app.use(morgan('dev'))
 
-app.use('/social', socialRouter)
 app.use('/users', usersRouter)
+app.use('/social', socialRouter)
 
 app.listen(PORT, () => console.log(`Connected to ${PORT}!`))
