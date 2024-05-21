@@ -54,19 +54,19 @@ const createCommunity = async (req, res, next) => {
 }
 
 const destroy = async (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(400).json({ error: "Incorrect ID" })
-  }
-  const social = await SocialfindById(req.params.id)
-  if (!social) {
-    res.status(400).json({ error: "Social not Found" })
-  }
-  const user = await User.findById(req.body._id)
-  if (!social.user.equals(user.id)) {
-    return res.status(401).json({ error: 'You are Not Allowed' })
-  }
+  // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  //   res.status(400).json({ error: "Incorrect ID" })
+  // }
+  // const social = await SocialfindById(req.params.id)
+  // if (!social) {
+  //   res.status(400).json({ error: "Social not Found" })
+  // }
+  // const user = await User.findById(req.body._id)
+  // if (!social.user.equals(user.id)) {
+  //   return res.status(401).json({ error: 'You are Not Allowed' })
+  // }
   try {
-    const social = await Social.deleteOne()
+    const social = await Social.findByIdAndDelete(req.params.id)
     res.status(200).json({ success: "Social Deleted", social })
     // res.json(await Social.findByIdAndDelete(req.params.id))
   } catch (error) {
@@ -86,9 +86,8 @@ const destroyCommunity = async (req, res, next) => {
   //   return res.status(401).json({ error: 'You are Not Allowed' })
   // }
   try {
-    const community = await Community.deleteOne()
+    const community = await Community.findByIdAndDelete(req.params.id)
     res.status(200).json({ success: "Social Deleted", community })
-
   } catch (error) {
     return res.status(400).json({ error: error.message })
   }

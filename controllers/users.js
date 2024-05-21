@@ -13,17 +13,13 @@ const createToken = (_id) => {
 /*************** Register User ***************/
 const registerUser = async (req, res, next) => {
 
-  const { username, password } = req.body
+  const { email, password } = req.body
   // Check if all fields are used
-  if (!username || !password) {
+  if (!email || (!password && password.length < 8)) {
     return res.json({ error: "All fields are required" })
   }
-  // Check Password Length
-  if (!password || password.length < 8) {
-    return res.json({ error: "Password must be at least 8 characters" })
-  }
   // Check username
-  const exist = await User.findOne({ username })
+  const exist = await User.findOne({ email })
   if (exist) {
     return res.json({ error: "username Already Exist" })
   }
@@ -43,13 +39,13 @@ const registerUser = async (req, res, next) => {
 
 /*************** Login User ***************/
 const loginUser = async (req, res, next) => {
-  const { username, password } = req.body
+  const { email, password } = req.body
   // Check if all fields are used
-  if (!username || (!password && password.length < 8)) {
+  if (!email || (!password && password.length < 8)) {
     return res.json({ error: "All fields are required or password more than 8" })
   }
   // Check username
-  const user = await User.findOne({ username })
+  const user = await User.findOne({ email })
   if (!user) {
     return res.json({ error: "username Does Not Exists" })
   }

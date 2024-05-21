@@ -10,7 +10,7 @@ router.post('/community', socialRouter.createCommunity)
 router.get('/:id', socialRouter.show)
 router.get('/community/:id', socialRouter.showCommunity)
 router.delete('/:id', socialRouter.delete)
-router.delete('/community/:id', socialRouter.delete)
+router.delete('/community/delete/:id', socialRouter.delete)
 router.put('/:id', socialRouter.update)
 router.put('/community/:id', socialRouter.updateCommunity)
 

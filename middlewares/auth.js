@@ -16,9 +16,9 @@ const hashPassword = (password) => {
   })
 }
 
-// const comparePassword = (password, hashed) => {
-//   return bcrypt.compare(password, hashed)
-// }
+const comparePassword = (password, hashed) => {
+  return bcrypt.compare(password, hashed)
+}
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "10d" })
@@ -43,7 +43,7 @@ const authenticateUser = async (req, res, next) => {
 
 module.exports = {
   hashPassword,
-  // comparePassword,
+  comparePassword,
   authenticateUser,
   createToken
 }

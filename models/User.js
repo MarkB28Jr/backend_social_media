@@ -3,6 +3,10 @@ const Schema = mongoose.Schema
 
 /*************** User Schema ***************/
 const UserSchema = new Schema({
+  email: {
+    type: String,
+    unique: true
+  },
   username: {
     type: String,
     unique: true
@@ -11,6 +15,6 @@ const UserSchema = new Schema({
     type: String,
   }
 },
-{ timestamps: true });
+  { timestamps: true });
 
 module.exports = mongoose.model("User", UserSchema)
