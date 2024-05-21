@@ -5,18 +5,16 @@ const Schema = mongoose.Schema
 const SocialSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
-        required: true,
         ref: "User"
     },
     profileName: String,
     age: String,
     gender: {
         type: String,
-        enum: ['male', 'female', 'other']
     },
-    image: [{
+    image: {
         type: String
-    }],
+    },
     message: {
         type: Schema.Types.ObjectId,
         ref: 'Message'
