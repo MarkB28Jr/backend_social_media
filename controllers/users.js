@@ -60,7 +60,6 @@ const loginUser = async (req, res, next) => {
   }
 }
 
-
 /*************** Get User Profile to stay logged in ***************/
 const getProfile = (req, res) => {
   try {
