@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 /*************** Social / Profile / User Authiraztion Schema ***************/
+
 const SocialSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
