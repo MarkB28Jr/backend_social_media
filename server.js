@@ -10,13 +10,18 @@ const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const socialRouter = require('./routes/socials')
 const usersRouter = require('./routes/users')
+const CLIENT_URL = process.env.CLIENT_URL
 
 /*************** App ***************/
 app.use(express.json())
 app.use(cookieParser())
+// app.use((req, res, next) => {
+//   res.setHeader('Set-Cookie', 'SameSite=none')
+//   next()
+// })
 app.use(express.urlencoded({ extended: false }))
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: CLIENT_URL,
   credentials: true
 }))
 app.use(morgan('dev'))
