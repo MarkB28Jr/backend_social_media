@@ -13,7 +13,7 @@ const createToken = (_id) => {
 /*************** Register User ***************/
 const registerUser = async (req, res, next) => {
 
-  const { email, password } = req.body
+  const { email, username, password } = req.body
   // Check if all fields are used
   if (!email || (!password && password.length < 8)) {
     return res.json({ error: "All fields are required" })
@@ -21,17 +21,17 @@ const registerUser = async (req, res, next) => {
   // Check username
   const exist = await User.findOne({ email })
   if (exist) {
-    return res.json({ error: "username Already Exist" })
+    return res.json({ error: "That Email Already Exist" })
   }
   // Hash password
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
   try {
     // Register User
-    const user = await User.create({ username, password: hashedPassword })
+    const user = await User.create({ email, username, password: hashedPassword })
     // Create JWT Token
     const token = createToken(user._id)
-    res.status(201).json({ username, token })
+    res.status(201).json({ email, token })
   } catch (error) {
     return res.status(500).json({ error: error.message })
   }
@@ -52,7 +52,7 @@ const loginUser = async (req, res, next) => {
   // Check Password
   const matchPassword = await bcrypt.compare(password, user.password)
   if (matchPassword) {
-    jwt.sign({ username: user.username, id: user._id}, process.JWT_SECRET, {}, (err, token) => {
+    jwt.sign({ email: user.email, id: user._id}, JWT_SECRET, {}, (err, token) => {
       if (err) throw err
     })
   }

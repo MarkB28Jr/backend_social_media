@@ -19,12 +19,7 @@ const indexCommunity = async (req, res, next) => {
 
 const show = async (req, res, next) => {
   try {
-    const social = await Social.findById(req.params.id).populate('community').exec();
-    if (!social) {
-        return res.status(404).send('Social Community not found');
-    }
-    const socials = social.community;
-    res.render('flights/show', { social, community });
+    res.json(await Social.findById(req.params.id))
   } catch (error) {
     return res.status(400).json(error);
   }
@@ -66,32 +61,25 @@ const destroy = async (req, res, next) => {
   //   return res.status(401).json({ error: 'You are Not Allowed' })
   // }
   try {
+    // if (!social && !community) {
+    //   return res.status(404).json({ error: "Record not found" })
+    // }
     const social = await Social.findByIdAndDelete(req.params.id)
-    res.status(200).json({ success: "Social Deleted", social })
-    // res.json(await Social.findByIdAndDelete(req.params.id))
-  } catch (error) {
-    return res.status(400).json({ error: error.message })
-  }
-}
-const destroyCommunity = async (req, res, next) => {
-  // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-  //   res.status(400).json({ error: "Incorrect ID" })
-  // }
-  // const social = await SocialfindById(req.params.id)
-  // if (!social) {
-  //   res.status(400).json({ error: "Social not Found" })
-  // }
-  // const user = await User.findById(req.body._id)
-  // if (!social.user.equals(user.id)) {
-  //   return res.status(401).json({ error: 'You are Not Allowed' })
-  // }
-  try {
+    if (social) {
+      return res.json(await Social.findByIdAndDelete(req.params.id))
+
+    } 
+
     const community = await Community.findByIdAndDelete(req.params.id)
-    res.status(200).json({ success: "Social Deleted", community })
+    if (community) {
+      res.json(await Community.findByIdAndDelete(req.params.id))
+    
+    }
   } catch (error) {
     return res.status(400).json({ error: error.message })
   }
 }
+
 
 const update = async (req, res, next) => {
   try {
@@ -102,7 +90,7 @@ const update = async (req, res, next) => {
     // if (req.user._id.toString() !== req.body.user._id.toString()) {
     //   return res.status(401).json({ error: 'You are Not Allowed' })
     // }
-    const social = await Social.findByIdAndUpdate( req.params.id, req.body, { new: true })
+    const social = await Social.findByIdAndUpdate(req.params.id, req.body, { new: true })
     res.status(200).json({ success: "Social Updated", social })
     // res.json(await Social.findByIdAndUpdate(req.params.id, req.body, { new: true }))
   } catch (error) {
@@ -134,7 +122,6 @@ module.exports = {
   show,
   showCommunity,
   delete: destroy,
-  delete: destroyCommunity,
   update,
   updateCommunity,
 }
