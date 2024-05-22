@@ -1,6 +1,5 @@
 require("dotenv").config()
 require("./config/db.connection")
-
 /*************** Const ***************/
 const { PORT } = process.env
 const express = require("express")
@@ -11,7 +10,6 @@ const cookieParser = require('cookie-parser')
 const communitysRouter = require('./routes/communitys')
 const usersRouter = require('./routes/users')
 const CLIENT_URL = process.env.CLIENT_URL
-
 /*************** App ***************/
 app.use(express.json())
 app.use(cookieParser())
@@ -21,7 +19,6 @@ app.use(cors({
   credentials: true
 }))
 app.use(morgan('dev'))
-
 app.use('/users', usersRouter)
 app.use('/communitys', communitysRouter)
 

@@ -25,6 +25,7 @@ const comparePassword = (password, hashed) => {
 const createToken = (_id) => {
   return jwt.sign({ _id }, JWT_SECRET)
 }
+
 module.exports = {
   hashPassword,
   comparePassword,

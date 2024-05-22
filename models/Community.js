@@ -4,19 +4,20 @@ const Schema = mongoose.Schema
 /*************** Social Community Schema ***************/
 
 const CommentSchema = new Schema({
-  content: String,
   sender: {
     type: Schema.Types.ObjectId, ref: 'User'
   },
-  community: {
-    type: Schema.Types.ObjectId, ref: 'Community'
+  recipient: {
+    type: Schema.Types.ObjectId, ref: 'User'
   },
+  content: String,
 },
   { timestamps: true }
 )
 
 const CommunitySchema = new Schema({
   communityName: String,
+  comments: [CommentSchema],
   sender: {
     type: Schema.Types.ObjectId, ref: 'User'
   },

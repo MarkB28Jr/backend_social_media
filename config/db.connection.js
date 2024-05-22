@@ -7,4 +7,3 @@ mongoose.connection
   .on('open', () => console.log(`Connected to MongoDB to our ${mongoose.connection.name}`))
   .on('close', () => console.log(`Disconnected to MongoDB from our ${mongoose.connection.name}`))
   .on('error', (error) => console.log(error))
-
