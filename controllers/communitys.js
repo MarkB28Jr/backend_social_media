@@ -42,10 +42,35 @@ const update = async (req, res, next) => {
   }
 }
 
+const indexComments = async (req, res, next) => {
+  try {
+    res.json(await Community.find({}))
+  } catch (error) {
+    return res.status(400).json({ error: error.message })
+  }
+}
+const createComments = async (req, res, next) => {
+  try {
+    res.json(await Community.create(req.body))
+  } catch (error) {
+    return res.status(400).json({ error: error.message })
+  }
+}
+const showComments = async (req, res, next) => {
+  try {
+    res.json(await Community.findById(req.params.id))
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+}
+
 module.exports = {
   index,
   create,
   show,
   delete: destroy,
   update,
+  createComments,
+  showComments,
+  indexComments
 }
