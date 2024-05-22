@@ -15,10 +15,6 @@ const CLIENT_URL = process.env.CLIENT_URL
 /*************** App ***************/
 app.use(express.json())
 app.use(cookieParser())
-// app.use((req, res, next) => {
-//   res.setHeader('Set-Cookie', 'SameSite=none')
-//   next()
-// })
 app.use(express.urlencoded({ extended: false }))
 app.use(cors({
   origin: CLIENT_URL,
