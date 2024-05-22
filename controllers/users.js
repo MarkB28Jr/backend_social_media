@@ -60,35 +60,69 @@ const loginUser = async (req, res, next) => {
   }
 }
 
-/*************** Get User Profile to stay logged in ***************/
-const getProfile = (req, res) => {
-  try {
-    const token = req.cookies?.token;
-    if (!token) {
-      return res.status(401).json({ error: 'No token found' });
-    }
-    jwt.verify(token, JWT_SECRET, {}, (err, userData) => {
-      if (err) {
-        console.error('Error verifying JWT token:', err);
-        return res.status(401).json({ error: 'Invalid token' });
-      }
-      res.json(userData);
-    });
-  } catch (error) {
-    console.error('Error fetching user profile:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
-
 /*************** Logoff User ***************/
 const logoffUser = async () => {
   res.cookie('token', '', { SameSite: 'none', secure: true }).json({ message: "Logged Out" })
 }
 
+/*************** Register User ***************/
+const index = async (req, res, next) => {
+  try {
+    res.json(await User.find({}))
+  } catch (error) {
+    return res.status(400).json({ error: error.message })
+  }
+}
+const getUser = async (req, res, next) => {
+  try {
+    res.json(await User.findById(req.params.id))
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+}
+const updateUser = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: 'You are Unauthorized' })
+    }
+    // const user = await User.findById(req.body._id)
+    // if (req.user._id.toString() !== req.body.user._id.toString()) {
+    //   return res.status(401).json({ error: 'You are Not Allowed' })
+    // }
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    res.status(200).json({ success: "User Updated", user })
+  } catch (error) {
+    return res.status(400).json({ error: error.message })
+  }
+}
+
+const destroy = async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(400).json({ error: "Incorrect ID" })
+  }
+  const user = await User.findById(req.params.id)
+  if (!user) {
+    res.status(400).json({ error: "User not Found" })
+  }
+  if (!user.equals(user.id)) {
+    return res.status(401).json({ error: 'You are Not Allowed' })
+  }
+  try {
+    const user = await User.findByIdAndDelete(req.params.id)
+    if (user) {
+      return res.json(await User.findByIdAndDelete(req.params.id))
+    }
+  } catch (error) {
+    return res.status(400).json({ error: error.message })
+  }
+}
 /*************** Export ***************/
 module.exports = {
   registerUser,
   loginUser,
   logoffUser,
-  getProfile
+  index,
+  getUser,
+  updateUser,
+  delete: destroy
 }

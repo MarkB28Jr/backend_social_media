@@ -8,7 +8,7 @@ const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
-const socialRouter = require('./routes/socials')
+const communitysRouter = require('./routes/communitys')
 const usersRouter = require('./routes/users')
 const CLIENT_URL = process.env.CLIENT_URL
 
@@ -27,6 +27,6 @@ app.use(cors({
 app.use(morgan('dev'))
 
 app.use('/users', usersRouter)
-app.use('/social', socialRouter)
+app.use('/communitys', communitysRouter)
 
 app.listen(PORT, () => console.log(`Connected to ${PORT}!`))
