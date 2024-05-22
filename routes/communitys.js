@@ -9,8 +9,4 @@ router.get('/communitys/:id', communitysRouter.show)
 router.delete('/communitys/:id', communitysRouter.delete)
 router.put('/communitys/:id', communitysRouter.update)
 
-router.get('/communities/:communityId', communitysRouter.indexComments)
-router.post('/communities/:communityId/comments', communitysRouter.createComments)
-router.get('/communities/:communityId/comments', communitysRouter.showComments)
-
 module.exports = router
