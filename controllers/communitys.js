@@ -35,9 +35,8 @@ const destroy = async (req, res, next) => {
 }
 const update = async (req, res, next) => {
   try {
-    const social = await Community.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    res.status(200).json({ success: "Social Updated", social })
-    // res.json(await Social.findByIdAndUpdate(req.params.id, req.body, { new: true }))
+    const community = await Community.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    res.status(200).json({ success: "Community Updated", community })
   } catch (error) {
     return res.status(400).json({ error: error.message })
   }

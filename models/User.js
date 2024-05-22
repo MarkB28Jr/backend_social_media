@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 /*************** User Schema ***************/
-
 const ProfileSchema = new Schema({
   profileName: String,
   age: String,
@@ -29,7 +28,7 @@ const UserSchema = new Schema({
     minlength: 8,
     required: true,
   },
-  profile: [ProfileSchema]
+  profile: ProfileSchema
 },
   { timestamps: true })
 
